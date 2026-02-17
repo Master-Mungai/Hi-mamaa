@@ -232,18 +232,20 @@
         </div>
     </div>
 
-   <div id="screen6" class="screen screen-scroll">
+  <div id="screen6" class="screen screen-scroll">
         <button class="back-btn" onclick="showScreen('screen4')">⬅ Back to Menu</button>
         
-        <h2>CLICK TO PLAY</h2>
+        <h2>CLICK BELOW TO PLAY</h2>
         
         <div class="video-wrapper">
-            <video width="100%" controls playsinline muted autoplay>
-                <source src="https://drive.google.com/uc?export=download&id=1PLK5oNb8HIzqK-BdJCDQcN16-U04CkTO" type="video/mp4">
+            <video width="100%" style="border-radius: 10px;" playsinline muted autoplay loop>
+                <source src="video.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
 
+        <button class="big-btn" style="margin-top: 30px;" onclick="showScreen('screen7')">One last thing... ⬇</button>
+    </div>
         <button class="big-btn" style="margin-top: 30px;" onclick="showScreen('screen7')">One last thing... ⬇</button>
     </div>
 
@@ -322,4 +324,5 @@
 </body>
 
 </html>
+
 
