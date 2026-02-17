@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hi Mamaa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- GLOBAL MOBILE STYLES --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+            height: 100vh;
+            overscroll-behavior: none; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- SCREEN MANAGEMENT --- */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1;
+            background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        /* Scrollable screens (Letters/Video) */
+        .screen-scroll {
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+
+        /* --- BUTTONS --- */
+        button { touch-action: manipulation; }
+        
+        .big-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: #d63384;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(214, 51, 132, 0.4);
+            margin: 10px;
+            font-family: 'Poppins', sans-serif;
+            transition: transform 0.1s;
+        }
+        .big-btn:active { transform: scale(0.95); }
+
+        .back-btn {
+            background: transparent;
+            border: 2px solid #d63384;
+            color: #d63384;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* --- LOGIN --- */
+        .login-box { display: flex; flex-direction: column; gap: 15px; align-items: center; width: 100%; }
+        
+        input.magic-input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #d63384;
+            border-radius: 15px;
+            text-align: center;
+            outline: none;
+            width: 70%;
+            color: #d63384;
+            background: rgba(255,255,255,0.8);
+        }
+
+        /* --- TRAP GAME --- */
+        .trap-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            flex-wrap: wrap; 
+        }
+
+        /* --- MENU --- */
+        .menu-grid { display: flex; flex-direction: column; gap: 20px; width: 80%; max-width: 400px; }
+        .menu-btn {
+            background: white;
+            color: #d63384;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid white;
+            transition: 0.2s;
+        }
+        .menu-btn:active { background: #ffe0eb; }
+
+        /* --- LETTERS --- */
+        .paper-container {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            height: 600px;
+            margin: 30px auto;
+        }
+
+        .paper {
+            background: #fffdf0;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: #444;
+            text-align: left;
+            position: absolute;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .paper-1 { top: 0; left: 0; z-index: 5; transform: rotate(-2deg); }
+        .paper-2 { top: 320px; left: 10px; z-index: 6; transform: rotate(3deg); }
+
+        /* --- VIDEO CONTAINER (GOOGLE DRIVE) --- */
+        .video-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            /* 125% is for vertical mobile videos. If it looks cut off, change to 177.78% */
+            padding-bottom: 125%; 
+            height: 0;
+            margin: 20px auto;
+            border: 5px solid white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        h1, h2 { color: #d63384; padding: 0 10px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="screen1" class="screen active">
+        <h1>HI,MAAAMBO😝</h1>
+        <p>Turn up your volume...</p>
+        <button class="big-btn" onclick="startExperience()">🎵 Play Music</button>
+    </div>
+
+    <div id="screen2" class="screen">
+        <h2>HI MAMAA <br> whats the magic word?</h2>
+        <div class="login-box">
+            <input type="text" id="magicInput" class="magic-input" maxlength="15" placeholder="Password">
+            <button class="big-btn" onclick="checkLogin()">Enter</button>
+        </div>
+    </div>
+
+    <div id="screen3" class="screen">
+        <h1 style="font-family: 'Dancing Script', cursive; font-size: 3rem;">Will you be my forever?</h1>
+        <div class="trap-btns">
+            <button id="yesBtn" class="big-btn" style="background:#28a745" onclick="goToMenu()">Yes</button>
+            <button id="noBtn" class="big-btn" style="background:#dc3545" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <div id="screen4" class="screen">
+        <h2>Choose one...</h2>
+        <div class="menu-grid">
+            <button class="menu-btn" onclick="showScreen('screen5')">DEAR HEADACHE😄</button>
+            <button class="menu-btn" onclick="showScreen('screen6')">CHECK OUT MY WIFE</button>
+        </div>
+    </div>
+
+    <div id="screen5" class="screen screen-scroll">
+        <button class="back-btn" onclick="showScreen('screen4')">⬅ Back to Menu</button>
+        
+        <div class="paper-container">
+            <div class="paper paper-1">
+                <strong>My Dearest,</strong><br><br>
+                I wanted to create this little space just for us. 
+                Writing this, I'm thinking about how lucky I am to have you.
+                You are the best part of every single day.
+            </div>
+
+            <div class="paper paper-2">
+                <strong>Thank You...</strong><br><br>
+                For the laughs, the love, and the memories.
+                Thank you for being my Valentine.
+                <br><br>
+                Always yours,<br>
+                Me.
+            </div>
+        </div>
+    </div>
+
+    <div id="screen6" class="screen screen-scroll">
+        <button class="back-btn" onclick="showScreen('screen4')">⬅ Back to Menu</button>
+        
+        <h2>DOUBLE CLICK AND PLAY 👇</h2>
+        
+        <div class="video-wrapper">
+            <iframe 
+                src="https://drive.google.com/file/d/1PLK5oNb8HIzqK-BdJCDQcN16-U04CkTO/preview" 
+                allow="autoplay">
+            </iframe>
+        </div>
+
+        <button class="big-btn" style="margin-top: 30px;" onclick="showScreen('screen7')">One last thing... ⬇</button>
+    </div>
+
+    <div id="screen7" class="screen">
+        <h1 style="font-size: 2.5rem;">Hope you liked it.</h1>
+        <p style="font-size: 1.5rem; margin-top: 20px;">I love that smile 🥹</p>
+    </div>
+
+    <script>
+        /* =========================================
+           CONFIGURATION
+           ========================================= */
+        const magicWord = "forever";     // Password (lowercase)
+        /* ========================================= */
+
+        // Helper to switch screens
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        /* --- SCREEN 1: MUSIC --- */
+        function startExperience() {
+            // 1. Move to login immediately
+            showScreen('screen2');
+
+            // 2. Try to play music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => {
+                console.log("Audio couldn't play automatically");
+            });
+        }
+
+        /* --- SCREEN 2: LOGIN --- */
+        function checkLogin() {
+            const input = document.getElementById('magicInput');
+            if(input.value.toLowerCase() === magicWord) {
+                showScreen('screen3');
+            } else {
+                alert("Wrong magic word! Try again 😉");
+                input.value = "";
+            }
+        }
+        
+        // Allow pressing "Enter" key
+        document.getElementById('magicInput').addEventListener("keyup", function(e) {
+            if (e.key === "Enter") checkLogin();
+        });
+
+        /* --- SCREEN 3: TRAP GAME --- */
+        let noCount = 0;
+        function handleNo() {
+            noCount++;
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            
+            // Grow Yes button
+            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize * 1.2) + "px";
+            yesBtn.style.padding = "15px " + (currentSize * 1.5) + "px";
+
+            // Shrink/Change No button
+            if(noCount === 1) noBtn.innerText = "Really?";
+            if(noCount === 2) noBtn.innerText = "pls 🥲"; // YOUR TEXT HERE
+            if(noCount === 3) {
+                noBtn.style.opacity = "0";
+                noBtn.style.pointerEvents = "none";
+            }
+        }
+
+        function goToMenu() {
+            showScreen('screen4');
+        }
+
+    </script>
+</body>
+</html>
